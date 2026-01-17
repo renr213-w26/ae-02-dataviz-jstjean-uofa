@@ -332,8 +332,11 @@ Create side-by-side box plots of `roi` by `clean_test` where the boxes are color
 
 ```{r}
 #| label: roi-zoom
+#| warning: false 
 
-# add code here
+ggplot(bechdel, 
+       aes(x = clean_test, y = roi, colour = binary)) +
+         geom_boxplot() 
 ```
 
 What are those movies with *very* high returns on investment?
@@ -350,11 +353,24 @@ Expand on your plot from the previous step to zoom in on movies with `roi < ___`
 
 ```{r}
 #| label: roi-test-zoom
+#| warning: false 
 
-# add code here
+ggplot(bechdel, 
+       aes(x = clean_test, y = roi, colour = binary)) +
+         geom_boxplot() +
+  labs(
+    title = "Return on investement vs. Bechdel test result",
+    x = "Detailed Bechdel Result",
+    y = "Return on Investment",
+    colour = "Bechdel\nresult"
+  ) +
+  coord_cartesian(ylim = c(0, 18))
 ```
 
 What does this plot say about return-on-investment on movies that pass the Bechdel test?
+
+There doesn't seem to be a lot of difference between the return on investment between the movies that do and do not pass the Bechdel test.
+Some of the non-passing movies seem to do slightly better but there is no major loss of roi when it does pass the test.
 
 ### Render, commit, and push
 
