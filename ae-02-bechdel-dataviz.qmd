@@ -1,5 +1,10 @@
 ---
 title: "AE 02: Bechdel + data visualization"
+author: "Jessica St. Jean"
+format: pdf
+editor: 
+  markdown: 
+    wrap: sentence
 ---
 
 In this mini analysis we work with the data used in the FiveThirtyEight story titled ["The Dollar-And-Cents Case Against Hollywood's Exclusion of Women"](https://fivethirtyeight.com/features/the-dollar-and-cents-case-against-hollywoods-exclusion-of-women/).
@@ -39,12 +44,13 @@ We can use the `glimpse` function to get an overview (or "glimpse") of the data.
 ```{r}
 #| label: glimpse
 
-# add code here
+bechdel |>
+  glimpse()
 ```
 
 -   What does each observation (row) in the data set represent?
 
-Each observation represents a **\_\_\_**.
+Each observation represents a movie.
 
 -   How many observations (rows) are in the data set?
 
@@ -52,7 +58,7 @@ There are `r nrow(bechdel)` movies in the dataset.
 
 -   How many variables (columns) are in the data set?
 
-There are `___` columns in the dataset.
+There are `r ncol(bechdel)` columns in the dataset.
 
 ### Variables of interest
 
@@ -131,9 +137,10 @@ See <http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf> for many color optio
 
 ```{r}
 #| label: plot-point-color
+#| warning: false 
 
 ggplot(bechdel, aes(x = budget_2013, y = gross_2013)) +
-  geom_point(color = "deepskyblue3") 
+  geom_point(color = "hotpink") 
 ```
 
 ### Step 2 - Your turn
@@ -142,13 +149,14 @@ Add labels for the title and x and y axes.
 
 ```{r}
 #| label: plot-labels
+#| warning: false
 
 ggplot(bechdel, aes(x = budget_2013, y = gross_2013))+
-  geom_point(color = "deepskyblue3") + 
+  geom_point(color = "hotpink") + 
   labs(
-    x = "___", 
-    y = "___", 
-    title = "___"
+    x = "Movie budget (in 2013 $)", 
+    y = "Gross revenue (in 2013 $)", 
+    title = "Budget vs Revenue of Movies in 2013 "
   )
 ```
 
@@ -167,13 +175,14 @@ Modify the plot below, so the `color` of the points is based on the variable `bi
 
 ```{r}
 #| label: plot-aes-color
+#| warning: false 
 
-ggplot(bechdel, aes(x = budget_2013, y = gross_2013)) +
+ggplot(bechdel, aes(x = budget_2013, y = gross_2013, colour = binary)) +
   geom_point() + 
   labs(
     x = "Budget (in 2013 $)", 
     y = "Gross revenue (in 2013 $)", 
-    title = "Gross revenue vs. budget, by ___"
+    title = "Gross revenue vs. budget, by Bechdel Test Result"
   )
 ```
 
@@ -183,8 +192,15 @@ Expand on your plot from the previous step to make the size of your points based
 
 ```{r}
 #| label: plot-aes-size
+#| warning: false 
 
-# add code here
+ggplot(bechdel, aes(x = budget_2013, y = gross_2013, colour = binary, size = roi)) + 
+  geom_point() + 
+  labs(
+    x = "Budget (in 2013 $)", 
+    y = "Gross revenue (in 2013 $)", 
+    title = "Gross revenue vs. budget, by Bechdel Test Result"
+  )
 ```
 
 ### Step 5 - Your turn
@@ -193,8 +209,15 @@ Expand on your plot from the previous step to make the transparency (`alpha`) of
 
 ```{r}
 #| label: plot-aes-alpha
+#| warning: false 
 
-# add code here
+ggplot(bechdel, aes(x = budget_2013, y = gross_2013, colour = binary, size = roi, alpha = 0.5)) + 
+  geom_point() + 
+  labs(
+    x = "Budget (in 2013 $)", 
+    y = "Gross revenue (in 2013 $)", 
+    title = "Gross revenue vs. budget, by Bechdel Test Result"
+  )
 ```
 
 ### Step 6 - Your turn
@@ -203,8 +226,17 @@ Expand on your plot from the previous step by using `facet_wrap` to display the 
 
 ```{r}
 #| label: plot-facet-wrap
+#| warning: false 
+ggplot(bechdel, aes(x = budget_2013, y = gross_2013, 
+                    colour = binary, size = roi, alpha = 0.5)) + 
+  geom_point() + 
+  facet_wrap(~clean_test) +
+  labs(
+    x = "Budget (in 2013 $)", 
+    y = "Gross revenue (in 2013 $)", 
+    title = "Gross revenue vs. budget, by Bechdel Test Result"
+  )
 
-# add code here
 ```
 
 ### Step 7 - Demo
@@ -217,8 +249,20 @@ Make use of the [**scales**](https://scales.r-lib.org/) package, specifically th
 
 ```{r}
 #| label: plot-scales
+#| warning: false 
+ggplot(bechdel, aes(x = budget_2013, y = gross_2013, 
+                    colour = binary, size = roi, alpha = 0.5)) + 
+  geom_point() + 
+  facet_wrap(~clean_test) +
+  labs(
+    x = "Budget (in million 2013 $)", 
+    y = "Gross revenue (in million 2013 $)", 
+    title = "Gross revenue vs. budget, by Bechdel Test Result"
+  ) +
+  scale_x_continuous(label = label_number(scale = 1/1000000))+
+    scale_y_continuous(label = label_number(scale = 1/1000000))
 
-# add code here
+
 ```
 
 ### Step 8 - Your turn
@@ -228,11 +272,21 @@ Comment on whether this was a useful update.
 
 ```{r}
 #| label: plot-facet-grid
-
-# add code here
+#| warning: false 
+ggplot(bechdel, aes(x = budget_2013, y = gross_2013, 
+                    colour = binary, size = roi, alpha = 0.5)) + 
+  geom_point() + 
+  facet_grid(rows = vars(clean_test), cols = vars(binary)) +
+  labs(
+    x = "Budget (in million 2013 $)", 
+    y = "Gross revenue (in million 2013 $)", 
+    title = "Gross revenue vs. budget, by Bechdel Test Result"
+  ) +
+  scale_x_continuous(label = label_number(scale = 1/1000000))+
+    scale_y_continuous(label = label_number(scale = 1/1000000))
 ```
 
-Add comment here...
+I don't think it adds much overall because only the "ok" category passes so having a whole column for pass doesn't make a lot of sense.
 
 ### Step 9 - Demo
 
@@ -240,8 +294,20 @@ What other improvements could we make to this plot?
 
 ```{r}
 #| label: plot-improve
+#| warning: false 
+ggplot(bechdel, aes(x = budget_2013, y = gross_2013, 
+                    colour = binary, size = roi, alpha = 0.3)) + 
+  geom_point() + 
+  facet_grid(rows = vars(clean_test), cols = vars(binary)) +
+  labs(
+    x = "Budget (in million 2013 $)", 
+    y = "Gross revenue (in million 2013 $)", 
+    title = "Gross revenue vs. budget, by Bechdel Test Result"
+  ) +
+  scale_x_continuous(label = label_number(scale = 1/1000000))+
+    scale_y_continuous(label = label_number(scale = 1/1000000))
 
-# add code here
+
 ```
 
 ### Render, commit, and push
@@ -266,8 +332,11 @@ Create side-by-side box plots of `roi` by `clean_test` where the boxes are color
 
 ```{r}
 #| label: roi-zoom
+#| warning: false 
 
-# add code here
+ggplot(bechdel, 
+       aes(x = clean_test, y = roi, colour = binary)) +
+         geom_boxplot() 
 ```
 
 What are those movies with *very* high returns on investment?
@@ -284,11 +353,25 @@ Expand on your plot from the previous step to zoom in on movies with `roi < ___`
 
 ```{r}
 #| label: roi-test-zoom
+#| warning: false 
 
-# add code here
+ggplot(bechdel, 
+       aes(x = clean_test, y = roi, colour = binary)) +
+         geom_boxplot() +
+  labs(
+    title = "Return on investement vs. Bechdel test result",
+    x = "Detailed Bechdel Result",
+    y = "Return on Investment",
+    colour = "Bechdel\nresult"
+  ) +
+  coord_cartesian(ylim = c(0, 18))
 ```
 
 What does this plot say about return-on-investment on movies that pass the Bechdel test?
+
+There doesn't seem to be a lot of difference between the return on investment between the movies that do and do not pass the Bechdel test.
+Some of the non-passing movies seem to do slightly better but there is no major loss of roi when it does pass the test.
+So it would make sense to just make movies that pass.
 
 ### Render, commit, and push
 
