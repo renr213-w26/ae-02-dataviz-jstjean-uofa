@@ -371,6 +371,7 @@ What does this plot say about return-on-investment on movies that pass the Bechd
 
 There doesn't seem to be a lot of difference between the return on investment between the movies that do and do not pass the Bechdel test.
 Some of the non-passing movies seem to do slightly better but there is no major loss of roi when it does pass the test.
+So it would make sense to just make movies that pass.
 
 ### Render, commit, and push
 
